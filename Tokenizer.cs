@@ -5,51 +5,30 @@ using System.Collections.Generic;
 
 namespace Interpreter
 {
-  enum TokenType {
-    OPEN_BRACKET,
-    CLOSED_BRACKET,
-    NUMBER,
-    EOF,
-  }
-
-  struct Token {
-    TokenType type;
-    String literal;
-    Int32 start;
-    Int32 end;
-
-
-    public Token(TokenType type, String literal, Int32 start, Int32 end) {
-      this.type = type;
-      this.literal = literal;
-      this.start = start;
-      this.end = end;
-    }
-  }
-
   class Tokenizer {
 
-    List<Token> Tokens {get; set;}
-    String Source;
+    public List<Token> Tokens {get; protected set;}
+    readonly String Source;
 
     Int32 start;
     Int32 current;
-    Char? currentChar {
+
+    Char CurrentChar {
       get {
         try {
-          return this.Source[this.current++];
-        } catch(IndexOutOfRangeException e) {
-          return null;
+          return this.Source[this.current];
+        } catch(IndexOutOfRangeException) {
+          return '\0';
         }
       }
     }
     
-    Char? nextChar {
+    Char NextChar {
       get {
         try {
-          return this.Source[this.current++];
-        } catch(IndexOutOfRangeException e) {
-          return null;
+          return this.Source[this.current+1];
+        } catch(IndexOutOfRangeException) {
+          return '\0';
         }
       }
     }
@@ -61,34 +40,42 @@ namespace Interpreter
       this.start = 0; 
       this.current = 0;
 
-      while (!this.isEnd()) {
-        char currentChar = this.Source[current];
-        Console.WriteLine("[Tokenizer]: Next char {0}", currentChar);
+      while (!this.IsEnd()) {
+        this.start = this.current;
+        Console.WriteLine("[Tokenizer]: Next char {0}", CurrentChar);
 
-        switch(currentChar) {
-          case '(': this.addToken(new Token(TokenType.OPEN_BRACKET, null, this.start, this.current)); break;
-          case ')': this.addToken(new Token(TokenType.CLOSED_BRACKET, null, this.start, this.current)); break;
+        switch(CurrentChar) {
+          case '(': this.AddToken(new Token(TokenType.OPEN_BRACKET, null, this.start, this.current)); break;
+          case ')': this.AddToken(new Token(TokenType.CLOSED_BRACKET, null, this.start, this.current)); break;
+          case '+': this.AddToken(new Token(TokenType.ADD, null, this.start, this.current)); break;
+          case '-': this.AddToken(new Token(TokenType.SUBTRACT, null, this.start, this.current)); break;
+          case '*': this.AddToken(new Token(TokenType.MULTIPLY, null, this.start, this.current)); break;
+          case '/': this.AddToken(new Token(TokenType.DIVIDE, null, this.start, this.current)); break;
           default:
-            if (Char.IsDigit(currentChar)) {
-              while (true) {
-
+            if (Char.IsDigit(CurrentChar)) {
+              while (Char.IsDigit(CurrentChar)) this.Advance(); 
+              if (CurrentChar == '.' && Char.IsDigit(NextChar)) {
+                this.Advance();
+                while (Char.IsDigit(CurrentChar)) this.Advance(); 
               }
+
+              Console.WriteLine("[Tokenizer]: got number {0}", source[this.start..this.current]);
+              this.AddToken(
+                new Token(TokenType.NUMBER, source[this.start..this.current], this.start, this.current)
+              );
             }
             break;
         }
-        this.current++;
+        this.Advance();
       }
+      this.AddToken(new Token(TokenType.EOF, null, this.start, this.current));
     }
 
-    private Boolean isEnd() {
-      return this.Source.Length <= current;
-    }
+    private Boolean IsEnd() => this.Source.Length <= current;
 
-    private void advance() {
+    private void Advance() => this.current++;
 
-    }
-
-    private void addToken(Token token) {
+    private void AddToken(Token token) {
       Console.WriteLine("[Tokenizer]: added token {0}", token);
       this.Tokens.Add(token);
     }
