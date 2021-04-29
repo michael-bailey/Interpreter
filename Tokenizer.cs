@@ -45,12 +45,12 @@ namespace Interpreter
         Console.WriteLine("[Tokenizer]: Next char {0}", CurrentChar);
 
         switch(CurrentChar) {
-          case '(': this.AddToken(new Token(TokenType.OPEN_BRACKET, null, this.start, this.current)); break;
-          case ')': this.AddToken(new Token(TokenType.CLOSED_BRACKET, null, this.start, this.current)); break;
-          case '+': this.AddToken(new Token(TokenType.ADD, null, this.start, this.current)); break;
-          case '-': this.AddToken(new Token(TokenType.SUBTRACT, null, this.start, this.current)); break;
-          case '*': this.AddToken(new Token(TokenType.MULTIPLY, null, this.start, this.current)); break;
-          case '/': this.AddToken(new Token(TokenType.DIVIDE, null, this.start, this.current)); break;
+          case '(': this.AddToken(new Token(TokenType.OPEN_BRACKET, null, this.start, this.current)); this.Advance(); break;
+          case ')': this.AddToken(new Token(TokenType.CLOSED_BRACKET, null, this.start, this.current)); this.Advance(); break;
+          case '+': this.AddToken(new Token(TokenType.ADD, null, this.start, this.current)); this.Advance(); break;
+          case '-': this.AddToken(new Token(TokenType.SUBTRACT, null, this.start, this.current)); this.Advance(); break;
+          case '*': this.AddToken(new Token(TokenType.MULTIPLY, null, this.start, this.current)); this.Advance(); break;
+          case '/': this.AddToken(new Token(TokenType.DIVIDE, null, this.start, this.current)); this.Advance(); break;
           default:
             if (Char.IsDigit(CurrentChar)) {
               while (Char.IsDigit(CurrentChar)) this.Advance(); 
@@ -66,7 +66,7 @@ namespace Interpreter
             }
             break;
         }
-        this.Advance();
+        
       }
       this.AddToken(new Token(TokenType.EOF, null, this.start, this.current));
     }
