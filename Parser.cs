@@ -24,21 +24,6 @@ namespace Interpreter
 			}
 		}
 
-		Token? NextToken
-		{
-			get
-			{
-				try
-				{
-					return this.tokens[this.current + 1];
-				}
-				catch (IndexOutOfRangeException)
-				{
-					return null;
-				}
-			}
-		}
-
 		private void Advance() => this.current++;
 
 		private Boolean IsEnd() => this.tokens.Count <= current;
@@ -92,36 +77,6 @@ namespace Interpreter
 			}
 
 			return left;
-		}
-	}
-
-	class ASTNode
-	{
-		public readonly Token token;
-
-		public ASTNode(Token token)
-		{
-			this.token = token;
-		}
-	}
-
-	class NumberNode : ASTNode
-	{
-		public NumberNode(Token token) : base(token)
-		{
-		}
-	}
-
-	class OperatorNode : ASTNode
-	{
-
-		public readonly ASTNode left;
-		public readonly ASTNode right;
-
-		public OperatorNode(Token token, ASTNode left, ASTNode right) : base(token)
-		{
-			this.left = left;
-			this.right = right;
 		}
 	}
 }
