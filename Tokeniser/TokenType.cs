@@ -1,6 +1,6 @@
 namespace Interpreter
 {
-  enum TokenType {
+  public enum TokenType {
     OPEN_BRACKET,
     CLOSED_BRACKET,
     NUMBER,

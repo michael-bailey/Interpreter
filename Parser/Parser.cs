@@ -17,7 +17,7 @@ namespace Interpreter
 				{
 					return this.tokens[this.current];
 				}
-				catch (IndexOutOfRangeException)
+				catch (ArgumentOutOfRangeException)
 				{
 					return null;
 				}
@@ -46,7 +46,7 @@ namespace Interpreter
 			if (current?.type == TokenType.NUMBER)
 			{
 				this.Advance();
-				return new NumberNode(current);
+				return new NumberNode(current, current.Literal);
 			}
 			throw new Exception("token was not a number");
 		}
@@ -67,15 +67,21 @@ namespace Interpreter
 		private ASTNode Operation( Func<ASTNode> func, List<TokenType> operators)
 		{
 			ASTNode left = func();
-
-			while (operators.Contains((TokenType)(this.CurrentToken?.type)))
+			try
 			{
-				Token operation = (Token)this.CurrentToken;
-				this.Advance();
-				ASTNode right = func();
-				left = new OperatorNode(this.CurrentToken, left, right);
+				while (operators.Contains((TokenType)(this.CurrentToken?.type)))
+				{
+					Token operation = (Token)this.CurrentToken;
+					this.Advance();
+					ASTNode right = func();
+					left = new OperatorNode(operation, left, right);
+				}
 			}
-
+			catch (Exception e)
+			{
+				Console.WriteLine("error in parsing");
+				Console.WriteLine(e.Message);
+			}
 			return left;
 		}
 	}

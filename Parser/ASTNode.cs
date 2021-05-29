@@ -3,13 +3,15 @@
 namespace Interpreter
 {
 	[Serializable]
-	class ASTNode
+	public abstract class ASTNode
 	{
-		public readonly Token token;
+		public Token token { get; set; }
 
 		public ASTNode(Token token)
 		{
 			this.token = token;
 		}
+
+		public abstract void accept(IInterpreter interpreter);
 	}
 }

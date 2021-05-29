@@ -8,20 +8,25 @@ namespace Interpreter
   {
     readonly static JsonSerializerOptions Options = new JsonSerializerOptions()
     {
-      WriteIndented = true
+      WriteIndented = true,
     };
 
 		static void Main(string[] args)
     {
-      Tokenizer tokenizer1 = new Tokenizer("12.34+345*12.3-234");
+      Tokenizer tokenizer1 = new Tokenizer("10294843*246238472634-12142/2*2134732+23792584+2345");
       List<Token> tokens = tokenizer1.Tokens;
-			string tokenString = JsonSerializer.Serialize(tokens, Options);
-			Console.WriteLine("[Main]: Got tokens {0}", tokenString);
 
-      Parser parser = new Parser(tokens);
+			Parser parser = new Parser(tokens);
       ASTNode astTree = parser.Parse();
-      string ASTString = JsonSerializer.Serialize(astTree, Options);
-      Console.WriteLine("[Main]: Got AST {0}", ASTString);
+
+      Interpreter interpreter1 = new Interpreter(astTree);
+      float result = interpreter1.exec();
+
+      Console.WriteLine("[Main]: Got result {0}", result);
+
+      RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
+      interpreter2.exec();
+
     }
   }
 }

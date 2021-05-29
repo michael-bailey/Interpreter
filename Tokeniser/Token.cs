@@ -1,20 +1,18 @@
 using System;
 
-
-
 namespace Interpreter
 {
   [Serializable]
-  class Token {
+  public class Token {
     public TokenType type {get; set;}
-    public String literal {get; set;}
+		public String? Literal { get; set; }
     public Int32 start {get; set;}
     public Int32 end {get; set;}
 
 
     public Token(TokenType type, String literal, Int32 start, Int32 end) {
       this.type = type;
-      this.literal = literal;
+      this.Literal = literal;
       this.start = start;
       this.end = end;
     }
