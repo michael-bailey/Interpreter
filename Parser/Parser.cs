@@ -9,16 +9,11 @@ namespace Interpreter
 		Int32 start;
 		Int32 current;
 
-		Token? CurrentToken
-		{
-			get
-			{
-				try
-				{
+		Token? CurrentToken {
+			get {
+				try {
 					return this.tokens[this.current];
-				}
-				catch (ArgumentOutOfRangeException)
-				{
+				} catch (ArgumentOutOfRangeException) {
 					return null;
 				}
 			}
@@ -40,11 +35,25 @@ namespace Interpreter
 		}
 
 		//any number
-		private ASTNode? Number()
+		private ASTNode? Factor()
 		{
+
 			Token current = this.CurrentToken;
-			if (current?.type == TokenType.NUMBER)
-			{
+
+
+			if (current?.type == TokenType.OPEN_BRACKET) {
+				this.Advance();
+				ASTNode result = this.Expression();
+
+
+				if (this.CurrentToken.type != TokenType.CLOSED_BRACKET) {
+					throw new Exception("No Closing bracket");
+				}
+				this.Advance();
+				return result;
+			}
+
+			if (current?.type == TokenType.NUMBER) {
 				this.Advance();
 				return new NumberNode(current, current.Literal);
 			}
@@ -54,7 +63,7 @@ namespace Interpreter
 		// multiply or divide
 		private ASTNode Term()
 		{
-			return this.Operation(this.Number, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE });
+			return this.Operation(this.Factor, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE });
 		}
 
 		// add or subtract
@@ -64,21 +73,17 @@ namespace Interpreter
 
 		}
 
-		private ASTNode Operation( Func<ASTNode> func, List<TokenType> operators)
+		private ASTNode Operation(Func<ASTNode> func, List<TokenType> operators)
 		{
 			ASTNode left = func();
-			try
-			{
-				while (operators.Contains((TokenType)(this.CurrentToken?.type)))
-				{
+			try {
+				while (operators.Contains((TokenType)(this.CurrentToken?.type))) {
 					Token operation = (Token)this.CurrentToken;
 					this.Advance();
 					ASTNode right = func();
 					left = new OperatorNode(operation, left, right);
 				}
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				Console.WriteLine("error in parsing");
 				Console.WriteLine(e.Message);
 			}
