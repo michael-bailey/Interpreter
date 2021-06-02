@@ -12,7 +12,7 @@ namespace Interpreter
 
 		static void Main(string[] args)
 		{
-			Tokenizer tokenizer1 = new Tokenizer("3*((53+3)+(4/2))");
+			Tokenizer tokenizer1 = new Tokenizer("3^(1+2)");
 			List<Token> tokens = tokenizer1.Tokens;
 
 			Parser parser = new Parser(tokens);
