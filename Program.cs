@@ -4,11 +4,12 @@ using System.Text.Json;
 
 namespace Interpreter
 {
-	class Program
-	{
-		readonly static JsonSerializerOptions Options = new JsonSerializerOptions() {
-			WriteIndented = true,
-		};
+  class Program
+  {
+    readonly static JsonSerializerOptions Options = new JsonSerializerOptions()
+    {
+      WriteIndented = true,
+    };
 
 		static void Main(string[] args)
 		{
@@ -16,16 +17,20 @@ namespace Interpreter
 			List<Token> tokens = tokenizer1.Tokens;
 
 			Parser parser = new Parser(tokens);
-			ASTNode astTree = parser.Parse();
+      ASTNode astTree = parser.Parse();
 
-			Interpreter interpreter1 = new Interpreter(astTree);
-			float result = interpreter1.exec();
+      ASTNode
 
-			Console.WriteLine("[Main]: Got result {0}", result);
+      Interpreter interpreter1 = new Interpreter(astTree);
+      float result = interpreter1.exec();
 
-			RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
-			interpreter2.exec();
+      Console.WriteLine("[Main]: Got result {0}", result);
 
-		}
-	}
+
+
+      RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
+      interpreter2.exec();
+
+    }
+  }
 }
