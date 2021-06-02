@@ -12,9 +12,9 @@ namespace Interpreter
     };
 
 		static void Main(string[] args)
-    {
-      Tokenizer tokenizer1 = new Tokenizer("10294843*246238472634-12142/2*2134732+23792584+2345");
-      List<Token> tokens = tokenizer1.Tokens;
+		{
+			Tokenizer tokenizer1 = new Tokenizer("3^(1+2)");
+			List<Token> tokens = tokenizer1.Tokens;
 
 			Parser parser = new Parser(tokens);
       ASTNode astTree = parser.Parse();

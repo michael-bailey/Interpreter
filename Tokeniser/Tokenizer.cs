@@ -51,6 +51,7 @@ namespace Interpreter
           case '-': this.AddToken(new Token(TokenType.SUBTRACT, "-", this.start, this.current)); this.Advance(); break;
           case '*': this.AddToken(new Token(TokenType.MULTIPLY, "*", this.start, this.current)); this.Advance(); break;
           case '/': this.AddToken(new Token(TokenType.DIVIDE, "/", this.start, this.current)); this.Advance(); break;
+					case '^': this.AddToken(new Token(TokenType.IDECIE, "^",this.start, this.current)); this.Advance(); break;
           default:
             if (Char.IsDigit(CurrentChar)) {
               while (Char.IsDigit(CurrentChar)) this.Advance(); 

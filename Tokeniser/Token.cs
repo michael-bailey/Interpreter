@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 
 namespace Interpreter
@@ -8,7 +10,6 @@ namespace Interpreter
 		public String? Literal { get; set; }
     public Int32 start {get; set;}
     public Int32 end {get; set;}
-
 
     public Token(TokenType type, String literal, Int32 start, Int32 end) {
       this.type = type;

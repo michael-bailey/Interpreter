@@ -45,6 +45,9 @@ namespace Interpreter
 				case TokenType.DIVIDE:
 					this.stack.Push(left / right);
 					break;
+				case TokenType.IDECIE:
+					this.stack.Push((float)Math.Pow(left, right));
+					break;
 			}
 		}
 
