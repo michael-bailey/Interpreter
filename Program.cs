@@ -19,18 +19,13 @@ namespace Interpreter
 			Parser parser = new Parser(tokens);
       ASTNode astTree = parser.Parse();
 
-      ASTNode
-
       Interpreter interpreter1 = new Interpreter(astTree);
       float result = interpreter1.exec();
 
       Console.WriteLine("[Main]: Got result {0}", result);
 
-
-
       RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
       interpreter2.exec();
-
     }
   }
 }
