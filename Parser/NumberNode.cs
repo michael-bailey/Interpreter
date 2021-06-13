@@ -8,7 +8,7 @@ namespace Interpreter
 
 		public float value { get; private set; }
 
-		public NumberNode(Token token, string value) : base(token)
+		public NumberNode(Token token, long start, long end, string value) : base(token.type, start, end)
 		{
 			this.value = float.Parse(value);
 		}

@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Interpreter
 {
 	[Serializable]
 	public abstract class ASTNode
 	{
-		public Token token { get; private set; }
-
 		public TokenType type { get; private set; }
-		public Int64 start { get; private set; }
-		public Int64 end { get; private set; }
+		public Int64 Start { get; private set; }
+		public Int64 End { get; private set; }
 
-		public Dictionary<String, ASTNode> children { get; private set; }
-
-
-
-		public ASTNode(Token token)
+		public ASTNode(TokenType type, Int64 start, Int64 end)
 		{
-			this.token = token;
+			this.type = type;
+			this.Start = start;
+			this.End = end;
 		}
 
 		public abstract void accept(IInterpreter interpreter);

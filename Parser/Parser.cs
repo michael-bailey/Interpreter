@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Interpreter
 {
@@ -47,23 +48,46 @@ namespace Interpreter
 				this.Advance();
 				return result;
 			}
+
+			if (current?.type == TokenType.NAME) {
+				String FunctionName = current.Literal;
+				int start = current.start;
+
+				this.Advance();
+				if (this.CurrentToken?.type != TokenType.OPEN_BRACKET) { throw new Exception("[syntaxError]: Expected open bracket"); }
+
+				List<ASTNode> parameters = new();
+
+				this.Advance();
+				while (this.CurrentToken?.type != TokenType.CLOSED_BRACKET) {
+					ASTNode param = this.Expression();
+					parameters.Add(param);
+					if (this.CurrentToken?.type == TokenType.COMMA) this.Advance();
+				}
+
+				int end = (int)(this.CurrentToken?.end);
+
+				this.Advance();
+				return new FunctionNode(current, start, end, FunctionName, parameters);
+			}
+
 			if (current?.type == TokenType.NUMBER) {
 				this.Advance();
-				return new NumberNode(current, current.Literal);
+				return new NumberNode(current, current.start, current.end, current.Literal);
 			}
-			throw new Exception("token was not a number");
+			throw new Exception("Syntax Error: token was not a number or sub expression");
 		}
 
 		// indecie
 		private ASTNode Index()
 		{
-			return this.Operation(this.Factor, new List<TokenType> {TokenType.IDECIE});
+			return this.Operation(this.Factor, new List<TokenType> { TokenType.IDECIE });
 		}
 
 		// multiply or divide
 		private ASTNode Term()
 		{
-			return this.Operation(this.Index, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE });
+			return this.Operation(this.Index, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.MODULO });
 		}
 
 		// add or subtract
@@ -72,20 +96,18 @@ namespace Interpreter
 			return this.Operation(this.Term, new List<TokenType> { TokenType.ADD, TokenType.SUBTRACT });
 		}
 
-
 		private ASTNode Operation(Func<ASTNode> func, List<TokenType> operators)
 		{
 			ASTNode left = func();
-			try {
-				while (operators.Contains((TokenType)(this.CurrentToken?.type))) {
+			while (this.CurrentToken != null) {
+				if (operators.Contains(this.CurrentToken.type)) {
 					Token operation = (Token)this.CurrentToken;
 					this.Advance();
 					ASTNode right = func();
-					left = new OperatorNode(operation, left, right);
+					left = new OperatorNode(operation, operation.start, operation.end, left, right);
+				} else {
+					return left;
 				}
-			} catch (Exception e) {
-				Console.WriteLine("error in parsing");
-				Console.WriteLine(e.Message);
 			}
 			return left;
 		}

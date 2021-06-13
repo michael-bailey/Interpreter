@@ -14,7 +14,8 @@
 	<Indecie> '^' <Indecie>
 
 <Factor> ::= <Number> |
-	'(' <Expression> ')'
+	'(' <Expression> ')' |
+	<Function>
 
 <Function> ::= <MathsOperator> '(' <Arguments> ')'
 <Arguments> ::= <Number> |
