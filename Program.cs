@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Interpreter
@@ -12,6 +13,16 @@ namespace Interpreter
 
 		static void Main(string[] args)
 		{
+			/* Passing arguments
+			 * This section is designated to passing arguments for the programs execution type
+			 */
+
+			ArgStruct argStruct = ArgParser.Parse(args);
+
+			if (argStruct.Interactive) {
+				Program.InteractiveMode();
+			}
+
 			Tokenizer tokenizer1 = new Tokenizer("sin((40+50))*10");
 			List<Token> tokens = tokenizer1.Tokens;
 
@@ -25,6 +36,22 @@ namespace Interpreter
 
 			RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
 			interpreter2.exec();
+		}
+
+
+		static void InteractiveMode()
+		{
+			String inputbuffer;
+
+			while (true) {
+				Console.Write(":>");
+				inputbuffer = Console.ReadLine();
+				List<Token> tokens = new Tokenizer(inputbuffer).Tokens;
+				ASTNode astTree = new Parser(tokens).Parse();
+				double result = new Interpreter(astTree).exec();
+				Console.WriteLine(result);
+			}
+
 		}
 	}
 }
