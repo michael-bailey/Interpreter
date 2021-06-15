@@ -78,6 +78,13 @@ namespace Interpreter
 				case "tan":
 					this.stack.Push(Math.Tan(this.stack.Pop()));
 					break;
+				case "sum":
+					double start = 0;
+					for (int i = 0; i < node.parameters.Count; i++)
+						start += this.stack.Pop();
+					this.stack.Push(start);
+					break;
+
 				default:
 					throw new Exception("function not implemented");
 			}

@@ -23,7 +23,7 @@ namespace Interpreter
 				Program.InteractiveMode();
 			}
 
-			Tokenizer tokenizer1 = new Tokenizer("sin((40+50))*10");
+			Tokenizer tokenizer1 = new Tokenizer("sum(1 2 3 4 5 6 7 8 9)");
 			List<Token> tokens = tokenizer1.Tokens;
 
 			Parser parser = new Parser(tokens);
