@@ -51,7 +51,6 @@ namespace Interpreter
 				double result = new Interpreter(astTree).exec();
 				Console.WriteLine(result);
 			}
-
 		}
 	}
 }

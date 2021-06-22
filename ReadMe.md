@@ -1,6 +1,11 @@
-﻿# Maths interpreter langueage definnitions
+﻿# Maths interpreter language
+
+## Definitions
 
 ```
+<Document> ::= <Expression> |
+	<Expression> \n <Document>
+
 <Expression> ::= <Term> |
 	<Expression> '+' <Expression> |
 	<Expression> '-' <Expression> |
