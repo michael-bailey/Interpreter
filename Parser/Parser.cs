@@ -40,14 +40,15 @@ namespace Interpreter
 			List<ASTNode> expressions = new();
 			var start = this.start;
 
-			ASTNode expression = this.Expression();
-			expressions.Add(expression);
-
-			while (this.CurrentToken?.type == TokenType.NEW_LINE) 
+			while (this.CurrentToken != null) 
 			{
-				this.Advance();
-				expression = this.Expression();
+				if (this.CurrentToken.type == TokenType.NEW_LINE) {
+					this.Advance();
+					continue;
+				}
+				var expression = this.Expression();
 				expressions.Add(expression);
+				this.Advance();
 			}
 			var end = this.start;
 			return new DocumentNode(TokenType.Document, start, end, expressions);
@@ -93,6 +94,7 @@ namespace Interpreter
 				this.Advance();
 				return new NumberNode(current, current.start, current.end, current.Literal);
 			}
+
 			throw new Exception("Syntax Error: token was not a number or sub expression");
 		}
 

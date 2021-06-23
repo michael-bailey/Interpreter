@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -23,19 +24,20 @@ namespace Interpreter
 				Program.InteractiveMode();
 			}
 
-			Tokenizer tokenizer1 = new("2*2\n3*3");
-			List<Token> tokens = tokenizer1.Tokens;
+			if(argStruct.Input != null) {
+				string input = File.ReadAllText(argStruct.Input);
+				Console.WriteLine("got input:");
+				Console.WriteLine(input);
 
-			Parser parser = new(tokens);
-			DocumentNode document = parser.Parse();
+				List<Token> tokens = new Tokenizer(input).Tokens;
+				DocumentNode document = new Parser(tokens).Parse();
+				List<Double?> result = new Interpreter(document).Exec();
+				Console.WriteLine("[Main]: Got result {0}", JsonSerializer.Serialize<Object>(result, Options));
+			}
 
-			Interpreter interpreter1 = new(document);
-			List<Double?> result = interpreter1.Exec();
-
-			Console.WriteLine("[Main]: Got result {0}", JsonSerializer.Serialize<Object>(result));
-
-			// RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
-			// interpreter2.exec();
+			// List<Token> tokens = new Tokenizer("2*2\n3*3").Tokens;
+			// DocumentNode document = new Parser(tokens).Parse();
+			// List<Double?> result = new Interpreter(document).Exec();
 		}
 
 
@@ -44,11 +46,11 @@ namespace Interpreter
 			String inputbuffer;
 
 			while (true) {
-				Console.Write(":>");
+				Console.Write(" > ");
 				inputbuffer = Console.ReadLine();
 				List<Token> tokens = new Tokenizer(inputbuffer).Tokens;
 				DocumentNode document = new Parser(tokens).Parse();
-				List<Double?> result = new Interpreter(document).Exec();
+				Double? result = new Interpreter(document).Exec()[0];
 				Console.WriteLine(result);
 			}
 		}
