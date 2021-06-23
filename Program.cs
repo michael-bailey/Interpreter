@@ -14,32 +14,39 @@ namespace Interpreter
 
 		static void Main(string[] args)
 		{
-			/* Passing arguments
-			 * This section is designated to passing arguments for the programs execution type
-			 */
-
 			ArgStruct argStruct = ArgParser.Parse(args);
-
+			List<Token> tokens;
+			DocumentNode document;
+			List<Double?> result;
+			List<String> strings = new();
 			if (argStruct.Interactive) {
 				Program.InteractiveMode();
 			}
-
 			if(argStruct.Input != null) {
 				string input = File.ReadAllText(argStruct.Input);
 				Console.WriteLine("got input:");
 				Console.WriteLine(input);
-
-				List<Token> tokens = new Tokenizer(input).Tokens;
-				DocumentNode document = new Parser(tokens).Parse();
-				List<Double?> result = new Interpreter(document).Exec();
+				tokens = new Tokenizer(input).Tokens;
+				document = new Parser(tokens).Parse();
+				result = new Interpreter(document).Exec();
 				Console.WriteLine("[Main]: Got result {0}", JsonSerializer.Serialize<Object>(result, Options));
+			} else {
+				tokens = new Tokenizer("2*2\n3*3").Tokens;
+				document = new Parser(tokens).Parse();
+				result = new Interpreter(document).Exec();
 			}
-
-			// List<Token> tokens = new Tokenizer("2*2\n3*3").Tokens;
-			// DocumentNode document = new Parser(tokens).Parse();
-			// List<Double?> result = new Interpreter(document).Exec();
+			for (int i = 0; i < result.Count; i++) {
+				strings.Add(result[i].ToString() ?? "\n");
+			}
+			if (argStruct.Output != null) {
+				File.WriteAllLines(argStruct.Output, strings);
+			} else {
+				foreach (var item in strings)
+				{
+					Console.WriteLine("{0}", item);
+				}
+			}
 		}
-
 
 		static void InteractiveMode()
 		{
