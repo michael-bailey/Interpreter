@@ -12,6 +12,8 @@ namespace Interpreter
 		MODULO,
 		IDECIE,
 		NAME,
-		COMMA
+		COMMA,
+		NEW_LINE,
+		Document
 	}
 }

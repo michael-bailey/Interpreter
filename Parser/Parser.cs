@@ -30,9 +30,27 @@ namespace Interpreter
 			this.current = 0;
 		}
 
-		public ASTNode Parse()
+		public DocumentNode Parse()
 		{
-			return this.Expression();
+			return this.Document();
+		}
+
+		private DocumentNode Document()
+		{
+			List<ASTNode> expressions = new();
+			var start = this.start;
+
+			ASTNode expression = this.Expression();
+			expressions.Add(expression);
+
+			while (this.CurrentToken?.type == TokenType.NEW_LINE) 
+			{
+				this.Advance();
+				expression = this.Expression();
+				expressions.Add(expression);
+			}
+			var end = this.start;
+			return new DocumentNode(TokenType.Document, start, end, expressions);
 		}
 
 		//any number or sub expression
@@ -51,7 +69,7 @@ namespace Interpreter
 
 			if (current?.type == TokenType.NAME) {
 				String FunctionName = current.Literal;
-				int start = current.start;
+				this.start = current.start;
 
 				this.Advance();
 				if (this.CurrentToken?.type != TokenType.OPEN_BRACKET) { throw new Exception("[syntaxError]: Expected open bracket"); }

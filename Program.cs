@@ -23,19 +23,19 @@ namespace Interpreter
 				Program.InteractiveMode();
 			}
 
-			Tokenizer tokenizer1 = new Tokenizer("sum(1 2 3 4 5 6 7 8 9)");
+			Tokenizer tokenizer1 = new("2*2\n3*3");
 			List<Token> tokens = tokenizer1.Tokens;
 
-			Parser parser = new Parser(tokens);
-			ASTNode astTree = parser.Parse();
+			Parser parser = new(tokens);
+			DocumentNode document = parser.Parse();
 
-			Interpreter interpreter1 = new Interpreter(astTree);
-			double result = interpreter1.exec();
+			Interpreter interpreter1 = new(document);
+			List<Double?> result = interpreter1.Exec();
 
-			Console.WriteLine("[Main]: Got result {0}", result);
+			Console.WriteLine("[Main]: Got result {0}", JsonSerializer.Serialize<Object>(result));
 
-			RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
-			interpreter2.exec();
+			// RPNInterpreter interpreter2 = new RPNInterpreter(astTree);
+			// interpreter2.exec();
 		}
 
 
@@ -47,8 +47,8 @@ namespace Interpreter
 				Console.Write(":>");
 				inputbuffer = Console.ReadLine();
 				List<Token> tokens = new Tokenizer(inputbuffer).Tokens;
-				ASTNode astTree = new Parser(tokens).Parse();
-				double result = new Interpreter(astTree).exec();
+				DocumentNode document = new Parser(tokens).Parse();
+				List<Double?> result = new Interpreter(document).Exec();
 				Console.WriteLine(result);
 			}
 		}

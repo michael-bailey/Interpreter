@@ -4,3 +4,4 @@ obj/
 .ionide
 *.json
 *.xml
+*.calc

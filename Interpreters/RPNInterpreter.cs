@@ -11,7 +11,6 @@ namespace Interpreter
 	{
 		private ASTNode Tree { get; set; }
 
-
 		public RPNInterpreter(ASTNode treeRoot)
 		{
 			this.Tree = treeRoot;
@@ -45,6 +44,11 @@ namespace Interpreter
 		public void Visit(ParameterNode node)
 		{
 			node.expression.accept(this);
+		}
+
+		public void Visit(DocumentNode node)
+		{
+			Console.WriteLine("document C:");
 		}
 	}
 }
