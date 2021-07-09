@@ -43,15 +43,17 @@ namespace Interpreter
 			while (this.CurrentToken != null) 
 			{
 				if (this.CurrentToken.type == TokenType.NEW_LINE) {
+					expressions.Add(new EmptyNode(this.CurrentToken.type, this.start, this.current));
 					this.Advance();
 					continue;
 				}
-				var expression = this.Expression();
+
+				var expression = this.Index();
 				expressions.Add(expression);
 				this.Advance();
 			}
 			var end = this.start;
-			return new DocumentNode(TokenType.Document, start, end, expressions);
+			return new DocumentNode(TokenType.DOCUMENT, start, end, expressions);
 		}
 
 		//any number or sub expression
@@ -60,7 +62,7 @@ namespace Interpreter
 			Token current = this.CurrentToken;
 			if (current?.type == TokenType.OPEN_BRACKET) {
 				this.Advance();
-				ASTNode result = this.Expression();
+				ASTNode result = this.Index();
 				if (this.CurrentToken.type != TokenType.CLOSED_BRACKET) {
 					throw new Exception("No Closing bracket");
 				}
@@ -101,13 +103,13 @@ namespace Interpreter
 		// indecie
 		private ASTNode Index()
 		{
-			return this.Operation(this.Factor, new List<TokenType> { TokenType.IDECIE });
+			return this.Operation(this.Expression, new List<TokenType> { TokenType.IDECIE });
 		}
 
 		// multiply or divide
 		private ASTNode Term()
 		{
-			return this.Operation(this.Index, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.MODULO });
+			return this.Operation(this.Factor, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.MODULO });
 		}
 
 		// add or subtract

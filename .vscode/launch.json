@@ -27,7 +27,7 @@
 			"preLaunchTask": "build",
 			// If you have changed target frameworks, make sure to update the program path.
 			"program": "${workspaceFolder}/bin/Debug/net5.0/Interpreter.dll",
-			"args": ["-f", "./maths.calc"],
+			"args": ["-f", "./maths.calc", "-o", "./output.txt"],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
 			"console": "internalConsole",

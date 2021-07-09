@@ -31,7 +31,7 @@ namespace Interpreter
 				result = new Interpreter(document).Exec();
 				Console.WriteLine("[Main]: Got result {0}", JsonSerializer.Serialize<Object>(result, Options));
 			} else {
-				tokens = new Tokenizer("2*2\n3*3").Tokens;
+				tokens = new Tokenizer("2*2\n\n3*3").Tokens;
 				document = new Parser(tokens).Parse();
 				result = new Interpreter(document).Exec();
 			}
