@@ -122,7 +122,6 @@ namespace Interpreter
 			}
 		}
 
-		public void Visit(ParameterNode node)
 		{
 			throw new NotImplementedException();
 		}

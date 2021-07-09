@@ -41,12 +41,10 @@ namespace Interpreter
 			Console.Write(node.name + ' ');
 		}
 
-		public void Visit(ParameterNode node)
 		{
 			node.expression.accept(this);
 		}
 
-		public void Visit(DocumentNode node)
 		{
 			Console.WriteLine("document C:");
 		}

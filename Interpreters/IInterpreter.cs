@@ -5,7 +5,6 @@
 		void Visit(NumberNode node);
 		void Visit(OperatorNode node);
 		void Visit(FunctionNode node);
-		void Visit(ParameterNode node);
 		void Visit(DocumentNode node);
 	}
 }
