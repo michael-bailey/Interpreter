@@ -3,8 +3,11 @@
 ## Definitions
 
 ```
-<Document> ::= <Expression> |
-	<Expression> \n <Document>
+<Document> ::= \n |
+	<Expression> |
+	<Expression> \n <Document> |
+	\n <Document>
+
 
 <Expression> ::= <Term> |
 	<Expression> '+' <Expression> |

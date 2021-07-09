@@ -122,8 +122,9 @@ namespace Interpreter
 			}
 		}
 
+		public void Visit(EmptyNode node)
 		{
-			throw new NotImplementedException();
+			this.Results.Add(null);
 		}
 	}
 }
