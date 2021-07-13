@@ -48,7 +48,7 @@ namespace Interpreter
 					continue;
 				}
 
-				var expression = this.Index();
+				var expression = this.Expression();
 				expressions.Add(expression);
 				this.Advance();
 			}
@@ -62,7 +62,7 @@ namespace Interpreter
 			Token current = this.CurrentToken;
 			if (current?.type == TokenType.OPEN_BRACKET) {
 				this.Advance();
-				ASTNode result = this.Index();
+				ASTNode result = this.Expression();
 				if (this.CurrentToken.type != TokenType.CLOSED_BRACKET) {
 					throw new Exception("No Closing bracket");
 				}
@@ -103,13 +103,13 @@ namespace Interpreter
 		// indecie
 		private ASTNode Index()
 		{
-			return this.Operation(this.Expression, new List<TokenType> { TokenType.IDECIE });
+			return this.Operation(this.Factor, new List<TokenType> { TokenType.IDECIE });
 		}
 
 		// multiply or divide
 		private ASTNode Term()
 		{
-			return this.Operation(this.Factor, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.MODULO });
+			return this.Operation(this.Index, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.MODULO });
 		}
 
 		// add or subtract
