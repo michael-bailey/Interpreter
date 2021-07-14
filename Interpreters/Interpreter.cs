@@ -36,28 +36,31 @@ namespace Interpreter
 
 
 			// FIX: - Change this to check for variables and cast appropriately
-			var right = (Double)this.Stack.Pop();
-			var left = (Double)this.Stack.Pop();
+			var right = this.Stack.Pop();
+			var left = this.Stack.Pop();
+
+			var rightData = (right is String @rString) ? this.Environment[@rString] : (Double)right;
+			var leftData = (left is String @lString) ? this.Environment[@lString] : (Double)left;
 
 			switch (node.type)
 			{
 				case TokenType.ADD:
-					this.Stack.Push(left + right);
+					this.Stack.Push(leftData + rightData);
 					break;
 				case TokenType.SUBTRACT:
-					this.Stack.Push(left - right);
+					this.Stack.Push(leftData - rightData);
 					break;
 				case TokenType.MULTIPLY:
-					this.Stack.Push(left * right);
+					this.Stack.Push(leftData * rightData);
 					break;
 				case TokenType.DIVIDE:
-					this.Stack.Push(left / right);
+					this.Stack.Push(leftData / rightData);
 					break;
 				case TokenType.IDECIE:
-					this.Stack.Push((float)Math.Pow(left, right));
+					this.Stack.Push((float)Math.Pow(leftData, rightData));
 					break;
 				case TokenType.MODULO:
-					this.Stack.Push(left % right);
+					this.Stack.Push(leftData % rightData);
 					break;
 			}
 		}

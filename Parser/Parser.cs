@@ -78,7 +78,7 @@ namespace Interpreter
 
 				// test if funciton name
 				if (this.CurrentToken?.type != TokenType.OPEN_BRACKET) {
-					int end = (int)(this.CurrentToken?.end);
+					int end = current.end;
 					return new NameNode(current.type, start, end, name);
 				} else {
 					List<ASTNode> parameters = new();
