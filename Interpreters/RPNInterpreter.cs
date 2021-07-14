@@ -50,5 +50,15 @@ namespace Interpreter
 		{
 			throw new NotImplementedException();
 		}
+
+		public void Visit(AssignmentNode node)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Visit(NameNode node)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

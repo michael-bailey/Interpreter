@@ -48,7 +48,7 @@ namespace Interpreter
 					continue;
 				}
 
-				var expression = this.Expression();
+				var expression = this.Assignment();
 				expressions.Add(expression);
 				this.Advance();
 			}
@@ -71,25 +71,30 @@ namespace Interpreter
 			}
 
 			if (current?.type == TokenType.NAME) {
-				String FunctionName = current.Literal;
+				String name = current.Literal;
 				this.start = current.start;
 
 				this.Advance();
-				if (this.CurrentToken?.type != TokenType.OPEN_BRACKET) { throw new Exception("[syntaxError]: Expected open bracket"); }
 
-				List<ASTNode> parameters = new();
+				// test if funciton name
+				if (this.CurrentToken?.type != TokenType.OPEN_BRACKET) {
+					int end = (int)(this.CurrentToken?.end);
+					return new NameNode(current.type, start, end, name);
+				} else {
+					List<ASTNode> parameters = new();
 
-				this.Advance();
-				while (this.CurrentToken?.type != TokenType.CLOSED_BRACKET) {
-					ASTNode param = this.Expression();
-					parameters.Add(param);
-					if (this.CurrentToken?.type == TokenType.COMMA) this.Advance();
+					this.Advance();
+					while (this.CurrentToken?.type != TokenType.CLOSED_BRACKET) {
+						ASTNode param = this.Expression();
+						parameters.Add(param);
+						if (this.CurrentToken?.type == TokenType.COMMA) this.Advance();
+					}
+
+					int end = (int)(this.CurrentToken?.end);
+
+					this.Advance();
+					return new FunctionNode(current, start, end, name, parameters);
 				}
-
-				int end = (int)(this.CurrentToken?.end);
-
-				this.Advance();
-				return new FunctionNode(current, start, end, FunctionName, parameters);
 			}
 
 			if (current?.type == TokenType.NUMBER) {
@@ -110,6 +115,21 @@ namespace Interpreter
 		private ASTNode Term()
 		{
 			return this.Operation(this.Index, new List<TokenType> { TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.MODULO });
+		}
+
+		private ASTNode Assignment() {
+			ASTNode left = this.Expression();
+			while (this.CurrentToken != null) {
+				if (this.CurrentToken.type == TokenType.EQUALS) {
+					Token operation = (Token)this.CurrentToken;
+					this.Advance();
+					ASTNode right = this.Expression();
+					left = new AssignmentNode(operation.type, operation.start, operation.end, left, right);
+				} else {
+					return left;
+				}
+			}
+			return left;
 		}
 
 		// add or subtract

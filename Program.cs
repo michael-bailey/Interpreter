@@ -17,14 +17,14 @@ namespace Interpreter
 			ArgStruct argStruct = ArgParser.Parse(args);
 			List<Token> tokens;
 			DocumentNode document;
-			List<Double?> result;
+			List<Object?> result;
 			List<String> strings = new();
 			if (argStruct.Interactive) {
 				Program.InteractiveMode();
 			}
 			if(argStruct.Input != null) {
 				string input = File.ReadAllText(argStruct.Input);
-				Console.WriteLine("got input:");
+				Console.WriteLine("got input: {0}", input);
 				Console.WriteLine(input);
 				tokens = new Tokenizer(input).Tokens;
 				document = new Parser(tokens).Parse();
@@ -36,7 +36,7 @@ namespace Interpreter
 				result = new Interpreter(document).Exec();
 			}
 			for (int i = 0; i < result.Count; i++) {
-				strings.Add(result[i].ToString() ?? "\n");
+				strings.Add(result[i]?.ToString() ?? "");
 			}
 			if (argStruct.Output != null) {
 				File.WriteAllLines(argStruct.Output, strings);
@@ -57,7 +57,7 @@ namespace Interpreter
 				inputbuffer = Console.ReadLine();
 				List<Token> tokens = new Tokenizer(inputbuffer).Tokens;
 				DocumentNode document = new Parser(tokens).Parse();
-				Double? result = new Interpreter(document).Exec()[0];
+				Object? result = new Interpreter(document).Exec()[0];
 				Console.WriteLine(result);
 			}
 		}

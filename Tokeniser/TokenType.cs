@@ -14,6 +14,7 @@ namespace Interpreter
 		NAME,
 		COMMA,
 		NEW_LINE,
-		DOCUMENT
+		DOCUMENT,
+		EQUALS
 	}
 }

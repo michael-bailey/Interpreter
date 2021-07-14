@@ -7,5 +7,7 @@
 		void Visit(FunctionNode node);
 		void Visit(DocumentNode node);
 		void Visit(EmptyNode node);
+		void Visit(AssignmentNode node);
+		void Visit(NameNode node);
 	}
 }

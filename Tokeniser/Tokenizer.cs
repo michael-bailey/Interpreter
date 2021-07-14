@@ -55,6 +55,7 @@ namespace Interpreter
 					case '/': this.AddToken(new Token(TokenType.DIVIDE, "/", this.start, this.current)); this.Advance(); break;
 					case '^': this.AddToken(new Token(TokenType.IDECIE, "^", this.start, this.current)); this.Advance(); break;
 					case '%': this.AddToken(new Token(TokenType.MODULO, "%", this.start, this.current)); this.Advance(); break;
+					case '=': this.AddToken(new Token(TokenType.EQUALS, "=", this.start, this.current)); this.Advance(); break;
 					case '\n': this.AddToken(new Token(TokenType.NEW_LINE, "\n", this.start, this.current)); this.Advance(); break;
 					case ' ': this.Advance(); break;
 					default:

@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Interpreter
 {
 	public class Interpreter: IInterpreter
 	{
 		private ASTNode Tree { get; set; }
-		private Stack<Double> Stack { get; set; }
-		private List<Double?> Results { get; set; }
+		private Stack<Object> Stack { get; set; }
+		private List<Object?> Results { get; set; }
+		private Dictionary<String, Double> Environment { get; set; }
 
 		public Interpreter(DocumentNode treeRoot)
 		{
 			this.Tree = treeRoot;
 			this.Stack = new();
 			this.Results = new();
+			this.Environment = new();
 		}
 
-		public List<Double?> Exec()
+		public List<Object?> Exec()
 		{
 			this.Tree.accept(this);
 			return this.Results;
@@ -35,8 +34,10 @@ namespace Interpreter
 			node.left.accept(this);
 			node.right.accept(this);
 
-			var right = this.Stack.Pop();
-			var left = this.Stack.Pop();
+
+			// FIX: - Change this to check for variables and cast appropriately
+			var right = (Double)this.Stack.Pop();
+			var left = (Double)this.Stack.Pop();
 
 			switch (node.type)
 			{
@@ -67,24 +68,24 @@ namespace Interpreter
 			{
 				node.parameters[i].accept(this);
 			}
-
+			// FIX: - Change cast to check for variables and cast appropriately
 			switch (node.name)
 			{
 				case "sin":
-					this.Stack.Push(Math.Sin(this.Stack.Pop()));
+					this.Stack.Push(Math.Sin((Double)this.Stack.Pop()));
 					break;
 
 				case "cos":
-					this.Stack.Push(Math.Cos(this.Stack.Pop()));
+					this.Stack.Push(Math.Cos((Double)this.Stack.Pop()));
 					break;
 
 				case "tan":
-					this.Stack.Push(Math.Tan(this.Stack.Pop()));
+					this.Stack.Push(Math.Tan((Double)this.Stack.Pop()));
 					break;
 				case "sum":
 					double start = 0;
 					for (int i = 0; i < node.parameters.Count; i++)
-						start += this.Stack.Pop();
+						start += (Double)this.Stack.Pop();
 					this.Stack.Push(start);
 					break;
 
@@ -108,9 +109,13 @@ namespace Interpreter
 					case FunctionNode n:
 						this.Visit(n);
 						break;
+					case AssignmentNode n:
+						this.Visit(n);
+						break;
 				}
 				if (this.Stack.Count > 0)
 				{
+					// FIX: - Change this to check for variables and cast appropriately
 					var a = this.Stack.Pop();
 					this.Results.Add(a);
 				}
@@ -125,6 +130,23 @@ namespace Interpreter
 		public void Visit(EmptyNode node)
 		{
 			this.Results.Add(null);
+		}
+
+		public void Visit(AssignmentNode node)
+		{
+			node.Name.accept(this);
+			node.Expression.accept(this);
+
+			var res = (Double)this.Stack.Pop();
+			var name = (String)this.Stack.Pop();
+
+			this.Environment.Add(name, res);
+			this.Stack.Push(name + ": " + res.ToString());
+		}
+
+		public void Visit(NameNode node)
+		{
+			this.Stack.Push(node.Name);
 		}
 	}
 }
