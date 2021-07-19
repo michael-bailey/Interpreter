@@ -44,7 +44,7 @@ namespace Interpreter
 
 			while (!this.IsEnd()) {
 				this.start = this.current;
-				Console.WriteLine("[Tokenizer]: Next char {0}", CurrentChar);
+				// Console.WriteLine("[Tokenizer]: Next char {0}", CurrentChar);
 
 				switch (CurrentChar) {
 					case '(': this.AddToken(new Token(TokenType.OPEN_BRACKET, "(", this.start, this.current)); this.Advance(); break;
@@ -66,7 +66,7 @@ namespace Interpreter
 								while (Char.IsDigit(CurrentChar)) this.Advance();
 							}
 
-							Console.WriteLine("[Tokenizer]: got number {0}", source[this.start..this.current]);
+							// Console.WriteLine("[Tokenizer]: got number {0}", source[this.start..this.current]);
 							this.AddToken(
 								new Token(TokenType.NUMBER, source[this.start..this.current], this.start, this.current)
 							);
@@ -87,7 +87,7 @@ namespace Interpreter
 
 		private void AddToken(Token token)
 		{
-			Console.WriteLine("[Tokenizer]: added token {0}", token);
+			// Console.WriteLine("[Tokenizer]: added token {0}", token);
 			this.Tokens.Add(token);
 		}
 	}
