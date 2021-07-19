@@ -5,23 +5,29 @@ namespace Interpreter
 {
 	public class Interpreter: IInterpreter
 	{
-		private ASTNode Tree { get; set; }
 		private Stack<Object> Stack { get; set; }
-		private List<Object?> Results { get; set; }
-		private Dictionary<String, Double> Environment { get; set; }
+		public List<Object?> Results { get; private set; }
+		public Dictionary<String, Double> Environment { get; private set; }
 
-		public Interpreter(DocumentNode treeRoot)
+		public Interpreter()
 		{
-			this.Tree = treeRoot;
 			this.Stack = new();
 			this.Results = new();
 			this.Environment = new();
 		}
 
-		public List<Object?> Exec()
+		public void Interpret(dynamic node)
 		{
-			this.Tree.accept(this);
-			return this.Results;
+			this.Visit(node);
+		}
+
+		public object getRecentResult()
+		{
+			try {
+				return this.Results[^1];
+			} catch (System.ArgumentOutOfRangeException e) {
+				return "\n";
+			}
 		}
 
 		public void Visit(NumberNode node)
@@ -34,8 +40,6 @@ namespace Interpreter
 			node.left.accept(this);
 			node.right.accept(this);
 
-
-			// FIX: - Change this to check for variables and cast appropriately
 			var right = this.Stack.Pop();
 			var left = this.Stack.Pop();
 
@@ -106,6 +110,9 @@ namespace Interpreter
 					case NumberNode n:
 						this.Visit(n);
 						break;
+					case NameNode n:
+						this.Visit(n);
+						break;
 					case OperatorNode n:
 						this.Visit(n);
 						break;
@@ -113,6 +120,9 @@ namespace Interpreter
 						this.Visit(n);
 						break;
 					case AssignmentNode n:
+						this.Visit(n);
+						break;
+					case EmptyNode n:
 						this.Visit(n);
 						break;
 				}
@@ -149,6 +159,10 @@ namespace Interpreter
 
 		public void Visit(NameNode node)
 		{
+			if(this.Environment.ContainsKey(node.Name)) {
+				this.Stack.Push(this.Environment[node.Name]);
+				return;
+			}
 			this.Stack.Push(node.Name);
 		}
 	}

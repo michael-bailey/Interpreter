@@ -14,13 +14,17 @@ namespace Interpreter
 
 		static void Main(string[] args)
 		{
+			
 			ArgStruct argStruct = ArgParser.Parse(args);
 			List<Token> tokens;
-			DocumentNode document;
-			List<Object?> result;
+			dynamic document;
+			dynamic result;
+			Interpreter interpreter = new();
 			List<String> strings = new();
+
 			if (argStruct.Interactive) {
 				Program.InteractiveMode();
+				return;
 			}
 			if(argStruct.Input != null) {
 				string input = File.ReadAllText(argStruct.Input);
@@ -28,12 +32,14 @@ namespace Interpreter
 				Console.WriteLine(input);
 				tokens = new Tokenizer(input).Tokens;
 				document = new Parser(tokens).Parse();
-				result = new Interpreter(document).Exec();
+				interpreter.Interpret(document);
+				result = interpreter.Results;
 				Console.WriteLine("[Main]: Got result {0}", JsonSerializer.Serialize<Object>(result, Options));
 			} else {
 				tokens = new Tokenizer("2*2\n\n3*3").Tokens;
 				document = new Parser(tokens).Parse();
-				result = new Interpreter(document).Exec();
+				interpreter.Interpret(document);
+				result = interpreter.Results;
 			}
 			for (int i = 0; i < result.Count; i++) {
 				strings.Add(result[i]?.ToString() ?? "");
@@ -51,14 +57,16 @@ namespace Interpreter
 		static void InteractiveMode()
 		{
 			String inputbuffer;
+			Interpreter interpreter = new();
 
 			while (true) {
 				Console.Write(" > ");
 				inputbuffer = Console.ReadLine();
 				List<Token> tokens = new Tokenizer(inputbuffer).Tokens;
-				DocumentNode document = new Parser(tokens).Parse();
-				Object? result = new Interpreter(document).Exec()[0];
-				Console.WriteLine(result);
+				dynamic document = new Parser(tokens).Parse();
+				interpreter.Interpret(document);
+				dynamic result = interpreter.getRecentResult();
+				Console.WriteLine(result.ToString());
 			}
 		}
 	}
