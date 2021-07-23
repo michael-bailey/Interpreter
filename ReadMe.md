@@ -1,6 +1,25 @@
-﻿# Maths interpreter language
+# Maths interpreter language
+ 
+This is a simple interpreted programming language for completing mathematical calculations
 
-## Definitions
+## Current capabilities
+*	Addition and subtraction of factors
+*	Muliplication and division of factors
+*	Exponentiation of factors
+*	Basic trigonometric functions
+*	Variable assignment operation
+*	File input and output
+*	REPL mode
+
+## To be implemented
+* Function definitions
+* Array definitons
+* Functional programming funtions (E.G. map, fold, filter, etc...)
+
+## far in the future
+* Set definitions
+
+## language Definitions
 
 ```
 <Document> ::= \n |
